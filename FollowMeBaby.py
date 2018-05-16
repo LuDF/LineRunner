@@ -32,33 +32,47 @@ class FollowMeBaby:
                     if GPIO.input(self.pin[i]) == 1:
                         print("PIN {} black".format(i))
 
-                # # Va' capito se è possibile che sul pin[2] e sul pin[3] (o sul pin[2] e sul pin[4]) venga letto nero in contemporanea
-                # # v motore sinistro < v motore destro
-                # if GPIO.input(self.pin[3]) == 0 and GPIO.input(self.pin[2]) == 1 or GPIO.input(self.pin[3]) == 0 and GPIO.input(
-                #         self.pin[2]) == 0:
-                #     print("v motore sinistro < v motore destro")
-                #     while GPIO.input(pin[2]) == 1:
-                #         left_motor_speed = left_motor_speed - 0.05
+                 # Curva dolce verso sinistra
+                 if GPIO.input(self.pin[3]) == 1 and GPIO.input(self.pin[2]) == 0 or GPIO.input(self.pin[3]) == 1 and GPIO.input(
+                         self.pin[2]) == 1:
+                     while GPIO.input(pin[2]) == 0:
+                         config.walk_speed_left = config.walk_speed_left - 0.05
 
-                # # v motore sinistro > v motore destro
-                # if GPIO.input(self.pin[4]) == 0 and GPIO.input(self.pin[2]) == 1 or GPIO.input(self.pin[4]) == 0 and GPIO.input(
-                #         self.pin[2]) == 0:
-                #     print("# v motore sinistro > v motore destro")
-                #     while GPIO.input(pin[2]) == 1:
-                #         right_motor_speed = right_motor_speed - 0.05
-                #
-                # # fermare i motori
-                # # -1*(v motore destro) = v motore sinistro
-                # if GPIO.input(self.pin[2]) == 1 and GPIO.input(self.pin[3]) == 1 and GPIO.input(self.pin[4]) == 0:
-                #     print("-1*(v motore destro) = v motore sinistro")
-                #
-                # # fermare i motori
-                # # -1*(v motore sinistro) = v motore destro
-                # if GPIO.input(self.pin[2]) == 1 and GPIO.input(self.pin[3]) == 1:
-                #     print("-1*(v motore sinistro) = v motore destro")
-                #
-                # # v motore destro = v motore sinistro
-                # if GPIO.input(self.pin[2]) == 0:  # Se legge nero
-                #     print("v motore destro = v motore sinistro")
+                 # Curva dolce verso destra
+                 if GPIO.input(self.pin[4]) == 1 and GPIO.input(self.pin[2]) == 0 or GPIO.input(self.pin[4]) == 1 and GPIO.input(
+                         self.pin[2]) == 1:
+                     # print("# v motore sinistro > v motore destro")
+                     while GPIO.input(pin[2]) == 0:
+                         config.walk_speed_right = config.walk_speed_right - 0.05
+                
+                 # Curva a 90° verso destra
+                 # -1*(v motore destro) = v motore sinistro
+                 if GPIO.input(self.pin[2]) == 0 and GPIO.input(self.pin[3]) == 0 and GPIO.input(self.pin[4]) == 0 and GPIO.input(self.pin[0]) == 0 and GPIO.input(self.pin[1]) == 1:
+                    while GPIO.input(pin[2]) == 0:
+                        # GPIO.output(config.left_motor_direction_inv, GPIO.LOW)
+                        # GPIO.output(config.left_motor_direction, GPIO.HIGH)
+                        GPIO.output(config.right_motor_direction, GPIO.LOW)
+                        GPIO.output(config.right_motor_direction_inv, GPIO.HIGH)
+
+                    
+                 # Curva a 90° verso sinistra
+                 # -1*(v motore sinistro) = v motore destro
+                 if GPIO.input(self.pin[2]) == 0 and GPIO.input(self.pin[3]) == 0 and GPIO.input(self.pin[4]) == 0 and GPIO.input(self.pin[1]) == 0 and GPIO.input(self.pin[0]) == 1:
+                    while GPIO.input(pin[2]) == 0:
+                        GPIO.output(config.left_motor_direction, GPIO.LOW)
+                        GPIO.output(config.left_motor_direction_inv, GPIO.HIGH)
+                        # GPIO.output(config.right_motor_direction, GPIO.HIGH)
+                        # GPIO.output(config.right_motor_direction_inv, GPIO.LOW)                     
+               
+            
+            
+            
+            # v motore destro = v motore sinistro
+                 if GPIO.input(self.pin[2]) == 1:  # Se legge nero
+                 #    print("v motore destro = v motore sinistro")
+                    GPIO.output(config.left_motor_direction, GPIO.)
+                    GPIO.output(config.left_motor_direction_inv, GPIO.HIGH)
+                    GPIO.output(config.right_motor_direction, GPIO.HIGH)
+                    GPIO.output(config.right_motor_direction_inv, GPIO.LOW)                     
         finally:
             GPIO.cleanup()
